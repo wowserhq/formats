@@ -8,6 +8,13 @@ const m2array = (type: IoType): IoType => new M2ArrayIo(type);
 
 const m2typedArray = (type: IoType, elements = 1): IoType => new M2TypedArrayIo(type, elements);
 
+const m2splineKey = (type: IoType): IoType =>
+  io.struct({
+    value: type,
+    inTan: type,
+    outTan: type,
+  });
+
 const m2string: IoType = new M2StringIo();
 
 const m2range: IoType = io.struct({

@@ -88,6 +88,8 @@ const m2event = io.struct({
   todo: io.typedArray(io.uint8, { size: 12 }),
 });
 
+const m2vector = io.typedArray(io.float32le, { size: 3 });
+
 const m2light = io.struct({
   lightType: io.uint16le,
   boneIndex: io.uint16le,
@@ -101,8 +103,11 @@ const m2camera = io.struct({
   fieldOfView: io.float32le,
   farClip: io.float32le,
   nearClip: io.float32le,
-  /* TODO tracks */
-  todo: io.typedArray(io.uint8, { size: 84 }),
+  positionTrack: m2track(m2splineKey(m2vector)),
+  positionBase: m2vector,
+  targetTrack: m2track(m2splineKey(m2vector)),
+  targetBase: m2vector,
+  rollTrack: m2track(m2splineKey(io.float32le)),
 });
 
 const m2ribbon = io.struct({
