@@ -33,6 +33,13 @@ class SoundEntriesRecord extends ClientDbRecord {
   constructor() {
     super(recordIo);
   }
+
+  randomPath() {
+    // TODO: Use freq to weight the randomization
+    const files = this.file.filter((f) => f !== '');
+    const file = files[Math.random() * (files.length - 1)];
+    return this.directoryBase + '\\' + file;
+  }
 }
 
 export default SoundEntriesRecord;
