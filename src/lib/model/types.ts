@@ -65,4 +65,20 @@ type M2TextureWeight = {
   weightTrack: M2Track<Int16Array>;
 };
 
-export { M2Bone, M2Color, M2Sequence, M2SkinSection, M2TextureTransform, M2TextureWeight, M2Track };
+type M2Camera = {
+  cameraId: number;
+  fieldOfView: number;
+  farClip: number;
+  nearClip: number;
+};
+
+export {
+  M2Bone,
+  M2Color,
+  M2Sequence,
+  M2SkinSection,
+  M2TextureTransform,
+  M2TextureWeight,
+  M2Track,
+  M2Camera,
+};
