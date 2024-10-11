@@ -19,3 +19,6 @@ export * from './model/M2SkinProfile.js';
 export * from './model/M2Batch.js';
 export * from './model/M2Material.js';
 export * from './model/M2Texture.js';
+export * from './model/M2Camera.js';
+export * from './model/M2Track.js';
+export * from './model/M2SplineKey.js';
