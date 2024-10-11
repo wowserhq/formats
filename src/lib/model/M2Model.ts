@@ -2,18 +2,14 @@ import { IoMode, IoSource, openStream } from '@wowserhq/io';
 import * as io from '@wowserhq/io';
 import * as m2Io from './io/m2.js';
 import { M2_BONE_FLAG, M2_MODEL_FLAG } from './const.js';
-import {
-  M2Sequence,
-  M2Track,
-  M2TextureTransform,
-  M2TextureWeight,
-  M2Color,
-  M2Bone,
-} from './types.js';
+import { M2Sequence, M2TextureTransform, M2TextureWeight, M2Color, M2Bone } from './types.js';
 import M2Texture, { M2_TEXTURE_COMBINER, M2_TEXTURE_COORD } from './M2Texture.js';
 import M2Material from './M2Material.js';
 import { m2typedArray } from './io/common.js';
 import M2Bounds from './M2Bounds.js';
+import M2Camera from './M2Camera.js';
+import M2Track from './M2Track.js';
+import M2SplineKey from './M2SplineKey.js';
 
 class M2Model {
   #name: string;
@@ -43,6 +39,8 @@ class M2Model {
 
   #sequences: M2Sequence[] = [];
   #loops: Uint32Array;
+
+  #cameras: M2Camera[] = [];
 
   get bones() {
     return this.#bones;
@@ -124,6 +122,10 @@ class M2Model {
     return this.#vertices;
   }
 
+  get cameras() {
+    return this.#cameras;
+  }
+
   load(source: IoSource) {
     const stream = openStream(source, IoMode.Read);
 
@@ -164,6 +166,8 @@ class M2Model {
 
     this.#sequences = data.sequences;
 
+    this.#loadCameras(data);
+
     return this;
   }
 
@@ -177,6 +181,38 @@ class M2Model {
     for (const textureData of data.textures) {
       this.#textures.push(
         new M2Texture(textureData.component, textureData.flags, textureData.filename),
+      );
+    }
+  }
+
+  createTrack(data: any): M2Track<M2SplineKey<number[]>> {
+    const splineKeys: M2SplineKey<number[]>[] = [];
+    for (const spline of data.sequenceKeys) {
+      splineKeys.push(new M2SplineKey<number[]>(spline.value, spline.inTan, spline.outTan));
+    }
+
+    return new M2Track<M2SplineKey<number[]>>(
+      data.trackType,
+      data.loopIndex,
+      data.sequenceTimes,
+      splineKeys,
+    );
+  }
+
+  #loadCameras(data: any) {
+    for (const cameraData of data.cameras) {
+      this.#cameras.push(
+        new M2Camera(
+          cameraData.cameraId,
+          cameraData.fieldOfView,
+          cameraData.farClip,
+          cameraData.nearClip,
+          this.createTrack(cameraData.positionTrack),
+          cameraData.positionBase,
+          this.createTrack(cameraData.targetTrack),
+          cameraData.targetBase,
+          this.createTrack(cameraData.rollTrack),
+        ),
       );
     }
   }
