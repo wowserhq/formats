@@ -1,6 +1,14 @@
 import * as io from '@wowserhq/io';
 import { IoType } from '@wowserhq/io';
-import { m2array, m2typedArray, m2bounds, m2range, m2string, m2track } from './common.js';
+import {
+  m2array,
+  m2typedArray,
+  m2bounds,
+  m2range,
+  m2string,
+  m2track,
+  m2splineKey,
+} from './common.js';
 
 const m2sequence = io.struct({
   id: io.uint16le,
@@ -23,9 +31,9 @@ const m2compBone = io.struct({
   parentIndex: io.int16le,
   distToParent: io.uint16le,
   boneNameCrc: io.uint32le,
-  translationTrack: m2track(io.float32le, 3),
-  rotationTrack: m2track(io.int16le, 4),
-  scaleTrack: m2track(io.float32le, 3),
+  translationTrack: m2track(m2typedArray(io.float32le, 3)),
+  rotationTrack: m2track(m2typedArray(io.int16le, 4)),
+  scaleTrack: m2track(m2typedArray(io.float32le, 3)),
   pivot: io.typedArray(io.float32le, { size: 3 }),
 });
 
@@ -38,8 +46,8 @@ const m2vertex = io.struct({
 });
 
 const m2color = io.struct({
-  colorTrack: m2track(io.float32le, 3),
-  alphaTrack: m2track(io.int16le),
+  colorTrack: m2track(m2typedArray(io.float32le, 3)),
+  alphaTrack: m2track(m2typedArray(io.int16le)),
 });
 
 const m2texture = io.struct({
@@ -49,13 +57,13 @@ const m2texture = io.struct({
 });
 
 const m2textureWeight = io.struct({
-  weightTrack: m2track(io.int16le),
+  weightTrack: m2track(m2typedArray(io.int16le)),
 });
 
 const m2textureTransform = io.struct({
-  translationTrack: m2track(io.float32le, 3),
-  rotationTrack: m2track(io.float32le, 4),
-  scalingTrack: m2track(io.float32le, 3),
+  translationTrack: m2track(m2typedArray(io.float32le, 3)),
+  rotationTrack: m2track(m2typedArray(io.float32le, 4)),
+  scalingTrack: m2track(m2typedArray(io.float32le, 3)),
 });
 
 const m2material = io.struct({
@@ -68,7 +76,7 @@ const m2attachment = io.struct({
   boneIndex: io.uint16le,
   padding: io.uint16le,
   position: io.typedArray(io.float32le, { size: 3 }),
-  visibilityTrack: m2track(io.uint8),
+  visibilityTrack: m2track(m2typedArray(io.uint8)),
 });
 
 const m2event = io.struct({

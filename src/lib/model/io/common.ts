@@ -20,12 +20,12 @@ const m2bounds: IoType = io.struct({
   radius: io.float32le,
 });
 
-const m2track = (type: IoType, elements = 1): IoType =>
+const m2track = (type: IoType): IoType =>
   io.struct({
     trackType: io.uint16le,
     loopIndex: io.uint16le,
     sequenceTimes: m2array(m2typedArray(io.uint32le)),
-    sequenceKeys: m2array(m2typedArray(type, elements)),
+    sequenceKeys: m2array(type),
   });
 
-export { m2array, m2typedArray, m2string, m2range, m2bounds, m2track };
+export { m2array, m2typedArray, m2string, m2range, m2bounds, m2track, m2splineKey };
